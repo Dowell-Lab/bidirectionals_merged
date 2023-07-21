@@ -38,7 +38,6 @@ if (is.null(opt$bidir_overlap)){
 #metadata
 meta <- data.table::fread(opt$metadata)
 qc_paper <- read.table(opt$metadata_qc, fill = TRUE, sep=',', header=FALSE)
-print(head(qc_paper, 3))
 
 #overlaps
 overlap <- data.table::fread(opt$bidir_overlap)
@@ -72,11 +71,13 @@ overlap_dreg$bidirs <- 'dREG'
 tfit_only$type <- 'Tfit Only'
 tfit_only$bidirs <- 'Tfit'
 tfit_only_singletons <- subset(tfit_only, V5 == 1) ##get call from 1 sample
+tfit_only_singletons$V4 <- as.character(lapply(strsplit(as.character(tfit_only_singletons$V4), '_'), `[`, 1)) #author name without cell type
 
 # dREG only data
 dreg_only$type <- 'dREG Only'
 dreg_only$bidirs <- 'dREG'
 dreg_only_singletons <- subset(dreg_only, V5 == 1) ##get call from 1 sample
+dreg_only_singletons$V4 <- as.character(lapply(strsplit(as.character(dreg_only_singletons$V4), '_'), `[`, 1)) #author name without cell type
 
 ##########################################
 ## get metadata by genome type          ##
@@ -131,6 +132,8 @@ tfit_dreg_low_gc <- subset(base_composition_tfit_dreg_qc,
 
 print(head(tfit_dreg_low_gc, 2))
 tfit_dreg_low_gc_qc <- subset(tfit_dreg_low_gc, V2 <=2)
+
+#get first author's last name for filtering the samples 
 tfit_dreg_low_gc_qc_samples <- unique(as.character(lapply(strsplit(as.character(tfit_dreg_low_gc_qc$author), '2'), `[`, 1)))
 
 #############################################
@@ -183,7 +186,7 @@ master_final <- master_qc1_2_gc_len_filter[, c(1,2,3,10,5)]
 master_final$strand <- "."
 
 #There were some calls from EBV. Removing them here
-master_final_chr <- master_final[!master_final$V1 %in% c("chrEBV"),]
+master_final_chr <- subset(master_final, V1 != "chrEBV") #master_final[!master_final$V1 %in% c("chrEBV"),]
 
 if (opt$genome == "human"){
 
