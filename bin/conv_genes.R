@@ -40,12 +40,6 @@ colnames(closest) <- c("chr1", "start1", "stop1",
                        "transcript_id2", "score2", "strand2", 
                        "distance")
 
-# add bidirectional ids based on chr:start-stop-source
-closest$bidir_id <- paste0(closest$chr2,
-                           ":", closest$start2,
-                           "-", closest$stop2,
-                           "-", closest$transcript_id2)
-
 #add gene length column
 closest$length1 <- closest$stop1 - closest$start1
 
@@ -58,9 +52,8 @@ converge <- closest[closest$distance > min_distance & closest$distance <= max_di
 # Get converging regions(right most of Pos gene & left most of neg gene)
 start <- converge$stop1
 end <- converge$start2
-distance <- end-start
+distance <- converge$distance
 name <- paste0(converge$transcript_id1, "||", converge$transcript_id2)
-converge_bidir_id <- converge$bidir_id
 
 # now get the center of the distances and add 1kb both directions for region
 center <- round((start + end)/2)
@@ -72,8 +65,7 @@ conv_regions <- data.table::data.table("chr"=converge$chr1,
                                       "stop"=end, 
                                       "name"=name,
                                       "orig_distance"=distance, 
-                                      "new_distance"=end-start, 
-                                      "bidir_id"=converge_bidir_id)
+                                      "new_distance"=end-start)
 
 if (opt$genome == "human"){
     
