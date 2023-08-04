@@ -17,8 +17,8 @@ echo "Get distances bewteen the closest positive and negative trasnscripts."
 # additionally, transcripts are spit into positive and negative strands
 cat ${annotations} | grep -v 'chr._\|chr.._' | grep '+' > ${outdir}/${genome}_refseq_transcripts_pos.bed
 
-# get distances of the 5 closest transcript pairs
-bedtools closest -S -k 5 -D ref \
+# get distances of the 2 closest transcript pairs
+bedtools closest -S -k 2 -D ref \
     -a ${outdir}/${genome}_refseq_transcripts_pos.bed \
     -b ${annotations} \
     > ${outdir}/${genome}_refseq_transcripts_closest_pos_to_neg.bed
