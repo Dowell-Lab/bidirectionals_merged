@@ -44,8 +44,10 @@ colnames(closest) <- c("chr1", "start1", "stop1", "bidir", "score1", "strand1", 
 # 2: Get bidirectionals that overlap run-on txpts #
 ###################################################
 # Get converging regions w/ <=1kb
-
-bidirs_non_conv <- bidirs[!bidirs$bidir_id %in% unique(closest$bidir_id),]
+# Save the bed 6 file format only (without the 'bidir_id')
+bidirs_non_conv <- bidirs[!bidirs$bidir_id %in% unique(closest$bidir_id), 
+			c("chr", "bidir_start", "bidir_stop",
+			"source", "score", "strand")]
 
 if (opt$genome == "human"){
     
