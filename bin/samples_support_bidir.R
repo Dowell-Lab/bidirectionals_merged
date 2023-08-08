@@ -20,6 +20,7 @@ if (is.null(opt$bed)){
   stop("At least one argument must be supplied (-b for bed file).n", call.=FALSE)
 }
 
+print("START: Get number of samples supporting a bidirectional call.")
 #define paths based in optparse
 bed_file <- data.table::fread(opt$bed)
 bed_file_name <- sub(pattern = "(.*)\\..*$", 

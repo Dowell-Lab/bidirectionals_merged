@@ -25,6 +25,7 @@ if (is.null(opt$closest)){
   stop("At least one argument must be supplied (-c bedfile).n", call.=FALSE)
 }
 
+print("START: Get bidirectionals overlapping converging genes.")
 #################################################
 # 1: Initialize files                          ##
 #################################################
@@ -79,4 +80,13 @@ if (opt$genome == "human"){
                             col.names = FALSE, 
                             sep='\t',
                             paste0(output_folder,"mm10_refseq_transcripts_converging_1kb.bed"))
+
 }
+
+#print summary of R session
+print("Session Summary")
+
+print(sessionInfo())
+
+print("DONE!")
+

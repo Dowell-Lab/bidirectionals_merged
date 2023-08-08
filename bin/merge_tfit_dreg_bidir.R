@@ -34,7 +34,10 @@ if (is.null(opt$bidir_overlap)){
   stop("At least one argument must be supplied (-b for bed file).n", call.=FALSE)
 }
 
-## Load the data based on optparse
+print("START: Combining calls from dREG and Tfit.")
+########################################
+## Load the data based on optparse   ###
+########################################
 #metadata
 meta <- data.table::fread(opt$metadata)
 qc_paper <- read.table(opt$metadata_qc, fill = TRUE, sep=',', header=FALSE)
@@ -167,13 +170,13 @@ print(head(master_qc1_2_gc_filter, 2))
 #add a length filter
 if (opt$genome == "human"){
 
-    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$V3) - as.numeric(master_qc1_2_gc_filter$V2)
+    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$V3) - as.numeric(master_qc1_2_gc_filter$V2) + 1
     master_qc1_2_gc_len_filter <- subset(master_qc1_2_gc_filter, width > 150 & width < 2500)
 
 
 } else {
 
-    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$V3) - as.numeric(master_qc1_2_gc_filter$V2)
+    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$V3) - as.numeric(master_qc1_2_gc_filter$V2) + 1
     master_qc1_2_gc_len_filter <- subset(master_qc1_2_gc_filter, width > 150 & width < 2000)
 
 }
@@ -203,3 +206,12 @@ if (opt$genome == "human"){
                         paste0(output_folder,"mm10_master_mumerge_qc_gc_len_filtered.bed"))
 
 }
+
+#print summary of R session
+print("Session Summary")
+
+print(sessionInfo())
+
+print("DONE!")
+
+

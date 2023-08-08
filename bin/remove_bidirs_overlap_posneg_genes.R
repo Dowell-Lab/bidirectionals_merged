@@ -26,6 +26,7 @@ if (is.null(opt$bidir)){
   stop("At least one argument must be supplied (-a bedfile of bidirectionals).n", call.=FALSE)
 }
 
+print("START: Remove bidirectionals overlapping +/- genes.")
 #################################################
 # 1: Initialize files                          ##
 #################################################
@@ -88,3 +89,11 @@ if (opt$genome == "human"){
                             sep='\t',
                             paste0(output_folder,"mm10_master_qc_gc_len_posneg_gene_filt.bed"))
 }
+
+#print summary of R session
+print("Session Summary")
+
+print(sessionInfo())
+
+print("DONE!")
+
