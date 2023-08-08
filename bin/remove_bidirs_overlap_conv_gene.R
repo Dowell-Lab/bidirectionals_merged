@@ -36,7 +36,7 @@ colnames(bidirs) <- c("chr", "bidir_start", "bidir_stop",
                     "source", "score", "strand", "bidir_id")
 
 colnames(closest) <- c("chr1", "start1", "stop1", "bidir", "score1", "strand1", "bidir_id", 
-                       "chr2", "start2", "stop2", "gene_id","length","dest", "gene_id2", "distance")
+                       "chr2", "start2", "stop2", "gene_id","length","dest", "distance")
 
 ###################################################
 # 2: Get bidirectionals that overlap run-on txpts #
