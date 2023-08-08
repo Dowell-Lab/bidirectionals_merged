@@ -10,14 +10,10 @@ option_list = list(
 	          help="Bed file for master bidirectionals after filtering (qc, gc, len & pos/neg gene filter)", metavar="character"),
 			make_option(c("-c", "--closest"), type="character", default=NULL, 
 			      help="Bed file with the closest pos/neg transcripts", metavar="character"),          
-    make_option(c("-d", "--dist"), type="character", default=1000, 
-          help="Distance between pairs", metavar="integer"),
-    make_option(c("-m", "--mindist"), type="character", default=0, 
-          help="Distance between pairs", metavar="integer"),
     make_option(c("-g", "--genome"), type="character", default=NULL, 
           help="Genome type (human or mouse)", metavar="character"),
 	  make_option(c("-o", "--out"), type="character", default="./", 
-              help="path to output directory [default= %default]", metavar="character")
+              help="path to output directory [default = %default]", metavar="character")
 ); 
  
 opt_parser = OptionParser(option_list=option_list);
@@ -31,8 +27,6 @@ if (is.null(opt$bidir)){
 #################################################
 # 1: Initialize files                          ##
 #################################################
-max_distance <- as.numeric(opt$dist)
-min_distance <- as.numeric(opt$mindist)
 output_folder <- opt$out
 bidirs <- data.table::fread(opt$bidir)
 closest <- data.table::fread(opt$closest)

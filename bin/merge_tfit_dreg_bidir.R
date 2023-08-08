@@ -20,10 +20,10 @@ option_list = list(
           	help="Folder with CG base content files for all papers", metavar="character"),
     	make_option(c("-g", "--genome"), type="character", default=NULL, 
           	help="Genome type (human or mouse)", metavar="character"),
-    	make_option(c("-q", "--qc"), type="character", default=2, 
-          	help="Maximum paper QC to filter", metavar="integer"),
+    	make_option(c("-q", "--qc"), type="integer", default=2, 
+          	help="Maximum paper QC to filter [default = %default]", metavar="integer"),
 	make_option(c("-o", "--out"), type="character", default="./", 
-        	help="path to output directory [default= %default]", metavar="character")
+        	help="path to output directory [default = %default]", metavar="character")
 ); 
  
 opt_parser = OptionParser(option_list=option_list);

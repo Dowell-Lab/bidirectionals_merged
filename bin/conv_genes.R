@@ -7,14 +7,14 @@ suppressMessages(library(optparse)) ##adding arguments
 # define input and output options
 option_list = list(make_option(c("-c", "--closest"), type="character", default=NULL, 
 			      help="Bed file with the closest pos/neg transcripts", metavar="character"),          
-    make_option(c("-d", "--dist"), type="character", default=1000, 
-          help="Distance between pairs", metavar="integer"),
-    make_option(c("-m", "--mindist"), type="character", default=0, 
-          help="Distance between pairs", metavar="integer"),
+    make_option(c("-d", "--dist"), type="integer", default=1000, 
+          help="Maximum distance between pairs [default = %default]", metavar="integer"),
+    make_option(c("-m", "--mindist"), type="integer", default=0, 
+          help="Minimum distance between pairs [default = %default]", metavar="integer"),
     make_option(c("-g", "--genome"), type="character", default=NULL, 
           help="Genome type (human or mouse)", metavar="character"),
 	  make_option(c("-o", "--out"), type="character", default="./", 
-              help="path to output directory [default= %default]", metavar="character")
+              help="path to output directory [default = %default]", metavar="character")
 ); 
  
 opt_parser = OptionParser(option_list=option_list);
