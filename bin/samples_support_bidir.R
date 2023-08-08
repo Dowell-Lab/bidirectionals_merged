@@ -27,8 +27,11 @@ bed_file_name <- sub(pattern = "(.*)\\..*$",
                     base::basename(opt$bed))
 output_folder <- opt$out
 
+#rename the colums
+colnames(bed_file) <-  c('chr','start','stop','papers')
+
 #count the number of samples that support a region
-bed_file$num_papers <- lapply(strsplit(as.character(bed_file$V4), ','), length)
+bed_file$num_papers <- lapply(strsplit(as.character(bed_file$papers), ','), length)
 
 #save files
 final_path <- paste0(output_folder, 
