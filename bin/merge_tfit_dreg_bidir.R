@@ -35,9 +35,9 @@ if (is.null(opt$bidir_overlap)){
 }
 
 print("START: Combining calls from dREG and Tfit.")
-########################################
-## Load the data based on optparse   ###
-########################################
+############################################
+##1. Load the data based on optparse      ##
+############################################
 #metadata
 meta <- data.table::fread(opt$metadata)
 qc_paper <- read.table(opt$metadata_qc, fill = TRUE, sep=',', header=FALSE)
@@ -56,16 +56,30 @@ bc_files <- list.files(path=opt$cg, pattern="txt$", full.names=TRUE)
 print("Base Composition Files: ")
 print(bc_files)
 
-#########################################
-## subset the data.tables for overlaps ##
-#########################################
+###########################################
+##2. Update column names                 ##
+###########################################
+colnames(qc_paper) <- c("paper","qc")
+
+colnames(overlap) <- c('chr_tfit','start_tfit','stop_tfit','papers_tfit','num_papers_tfit',
+                       'chr_dreg','start_dreg','stop_dreg','papers_dreg','num_papers_dreg')
+
+colnames(tfit_only) <- c('chr','start','stop','papers','num_papers')
+
+colnames(dreg_only) <- c('chr','start','stop','papers','num_papers')
+
+###########################################
+##3. Subset the data.tables for overlaps ##
+###########################################
 # First five columns are Tfit
-overlap_tfit <- unique(overlap[,1:5])
+overlap_tfit <- unique(overlap[,c('chr_tfit','start_tfit','stop_tfit',
+                                  'papers_tfit','num_papers_tfit')])
 overlap_tfit$type <- 'Tfit Overlap'
 overlap_tfit$bidirs <- 'Tfit'
 
 # The following 5 are dREG regions
-overlap_dreg <- unique(overlap[,6:10])
+overlap_dreg <- unique(overlap[,c('chr_dreg','start_dreg','stop_dreg',
+                                  'papers_dreg','num_papers_dreg')])
 overlap_dreg$type <- 'dREG Overlap'
 overlap_dreg$bidirs <- 'dREG'
 
@@ -73,18 +87,18 @@ overlap_dreg$bidirs <- 'dREG'
 # Tfit only data
 tfit_only$type <- 'Tfit Only'
 tfit_only$bidirs <- 'Tfit'
-tfit_only_singletons <- subset(tfit_only, V5 == 1) ##get call from 1 sample
-tfit_only_singletons$V4 <- as.character(lapply(strsplit(as.character(tfit_only_singletons$V4), '_'), `[`, 1)) #author name without cell type
+tfit_only_singletons <- subset(tfit_only, num_papers == 1) ##get calls found in only 1 sample
+tfit_only_singletons$papers <- as.character(lapply(strsplit(as.character(tfit_only_singletons$papers), '_'), `[`, 1)) #author name without cell type
 
 # dREG only data
 dreg_only$type <- 'dREG Only'
 dreg_only$bidirs <- 'dREG'
-dreg_only_singletons <- subset(dreg_only, V5 == 1) ##get call from 1 sample
-dreg_only_singletons$V4 <- as.character(lapply(strsplit(as.character(dreg_only_singletons$V4), '_'), `[`, 1)) #author name without cell type
+dreg_only_singletons <- subset(dreg_only, num_papers == 1) ##get calls found in only 1 sample
+dreg_only_singletons$papers <- as.character(lapply(strsplit(as.character(dreg_only_singletons$papers), '_'), `[`, 1)) #author name without cell type
 
-##########################################
-## get metadata by genome type          ##
-##########################################
+##############################################
+##4. get metadata by genome type            ##
+##############################################
 
 if (opt$genome == "human"){
 
@@ -100,9 +114,9 @@ meta_genome_qc <- unique(meta_genome[,c('paper_id', 'samp_qc_score')])
 meta_genome_qc_filtered <- subset(meta_genome_qc, samp_qc_score<=max_qc) 
 meta_genome_qc_filtered_papers <- unique(meta_genome_qc_filtered$paper_id)
 
-#############################################
-## get GC content data for paper calls     ##
-#############################################
+###############################################
+##5. get GC content data for paper calls     ##
+###############################################
 ##load all base composition files
 bc_list <- lapply(bc_files, data.table::fread)
 base_composition <- do.call(rbind, bc_list)
@@ -125,7 +139,7 @@ colnames(base_composition_tfit_dreg) <- c('sample_name','id_tfit','cg_tfit','at_
                                          'id_dreg','cg_dreg','at_dreg', 'bidir_caller_dreg','author')
 
 ##merge with paper QC data
-base_composition_tfit_dreg_qc <- merge(base_composition_tfit_dreg, qc_paper, by.x='author', by.y='V1')
+base_composition_tfit_dreg_qc <- merge(base_composition_tfit_dreg, qc_paper, by.x='author', by.y='paper')
 
 ##extract samples with low GC and have a high QC 
 ##since these will be removed 
@@ -134,49 +148,49 @@ tfit_dreg_low_gc <- subset(base_composition_tfit_dreg_qc,
                                   as.numeric(cg_dreg) < 0.49 )
 
 print(head(tfit_dreg_low_gc, 2))
-tfit_dreg_low_gc_qc <- subset(tfit_dreg_low_gc, V2 <=2)
+tfit_dreg_low_gc_qc <- subset(tfit_dreg_low_gc, qc <=2)
 
 #get first author's last name for filtering the samples 
 tfit_dreg_low_gc_qc_samples <- unique(as.character(lapply(strsplit(as.character(tfit_dreg_low_gc_qc$author), '2'), `[`, 1)))
 
-#############################################
-## subsetting and getting high QC samples  ##
-#############################################
+#################################################
+##6. subsetting and getting high QC samples    ##
+#################################################
 #get high QC singletons
 #Tfit
-tfit_only_singletons_qc <- tfit_only_singletons[tfit_only_singletons$V4 %in% meta_genome_qc_filtered_papers,]
+tfit_only_singletons_qc <- tfit_only_singletons[tfit_only_singletons$papers %in% meta_genome_qc_filtered_papers,]
 
 #dREG
-dreg_only_singletons_qc <- dreg_only_singletons[dreg_only_singletons$V4 %in% meta_genome_qc_filtered_papers,]
+dreg_only_singletons_qc <- dreg_only_singletons[dreg_only_singletons$papers %in% meta_genome_qc_filtered_papers,]
 
 
 ##excluding poor QC singletons...
-master_qc1_2 <- rbind(subset(tfit_only, V5 != 1),
+master_qc1_2 <- rbind(subset(tfit_only, num_papers != 1),
                         overlap_tfit,
-                        subset(dreg_only, V5 != 1),
+                        subset(dreg_only, num_papers != 1),
                         dreg_only_singletons_qc,
                         tfit_only_singletons_qc,
-                        fill=TRUE)
+                        use.names=FALSE)
 
 #get the number of low QC and GC papers supporting a call
-master_qc1_2$low_gc_num <- lengths(regmatches(master_qc1_2$V4,
+master_qc1_2$low_gc_num <- lengths(regmatches(master_qc1_2$papers,
                                                    gregexpr(tfit_dreg_low_gc_qc_samples, 
-                                                            master_qc1_2$V4)))
+                                                            master_qc1_2$papers)))
 
 #remove those call that are only low QC and GC papers
-master_qc1_2_gc_filter <- master_qc1_2[!master_qc1_2$V5==master_qc1_2$low_gc_num,]
+master_qc1_2_gc_filter <- master_qc1_2[!master_qc1_2$num_papers==master_qc1_2$low_gc_num,]
 print(head(master_qc1_2_gc_filter, 2))
 
 #add a length filter
 if (opt$genome == "human"){
 
-    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$V3) - as.numeric(master_qc1_2_gc_filter$V2) + 1
+    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$stop) - as.numeric(master_qc1_2_gc_filter$start) + 1
     master_qc1_2_gc_len_filter <- subset(master_qc1_2_gc_filter, width > 150 & width < 2500)
 
 
 } else {
 
-    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$V3) - as.numeric(master_qc1_2_gc_filter$V2) + 1
+    master_qc1_2_gc_filter$width <- as.numeric(master_qc1_2_gc_filter$stop) - as.numeric(master_qc1_2_gc_filter$start) + 1
     master_qc1_2_gc_len_filter <- subset(master_qc1_2_gc_filter, width > 150 & width < 2000)
 
 }
@@ -185,11 +199,11 @@ master_qc1_2_gc_len_filter$bidir_type <- ifelse(master_qc1_2_gc_len_filter$type 
                                                 "tfit",
                                                 ifelse(master_qc1_2_gc_len_filter$type == "dREG Only","dreg","tfit,dreg"))
 
-master_final <- master_qc1_2_gc_len_filter[, c(1,2,3,10,5)]
+master_final <- master_qc1_2_gc_len_filter[, c("chr","start","stop","bidir_type","num_papers")]
 master_final$strand <- "."
 
 #There were some calls from EBV. Removing them here
-master_final_chr <- subset(master_final, V1 != "chrEBV") #master_final[!master_final$V1 %in% c("chrEBV"),]
+master_final_chr <- subset(master_final, chr != "chrEBV") #master_final[!master_final$V1 %in% c("chrEBV"),]
 
 if (opt$genome == "human"){
 
