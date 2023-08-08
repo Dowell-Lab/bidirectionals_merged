@@ -9,15 +9,13 @@ option_list = list(
 	    make_option(c("-a", "--bidir"), type="character", default=NULL, 
 	          help="Bed file for master bidirectionals", metavar="character"),
 		  make_option(c("-b", "--bidirgene"), type="character", default=NULL, 
-		        help="Bed file with overlap between bidirectionals and gene transcripts", metavar="character"),  
-    make_option(c("-d", "--dist"), type="character", default=1000, 
-          help="Distance between pairs", metavar="integer"),
-    make_option(c("-f", "--frac"), type="character", default=0.975, 
-          help="Fraction of overlap between bidirectionals and genes", metavar="float"),
+		        help="Bed file with overlap between bidirectionals and gene transcripts", metavar="character"),
+    make_option(c("-f", "--frac"), type="double", default=0.975, 
+          help="Fraction of overlap between bidirectionals and genes [default = %default]", metavar="float"),
     make_option(c("-g", "--genome"), type="character", default=NULL, 
           help="Genome type (human or mouse)", metavar="character"),
 	  make_option(c("-o", "--out"), type="character", default="./", 
-              help="path to output directory [default= %default]", metavar="character")
+              help="path to output directory [default = %default]", metavar="character")
 ); 
  
 opt_parser = OptionParser(option_list=option_list);
@@ -31,7 +29,6 @@ if (is.null(opt$bidir)){
 #################################################
 # 1: Initialize files                          ##
 #################################################
-max_distance <- as.numeric(opt$dist)
 output_folder <- opt$out
 bidirs <- data.table::fread(opt$bidir)
 overlaps <- data.table::fread(opt$bidirgene)
@@ -66,8 +63,8 @@ overlaps$gene_length <- overlaps$gene_stop - overlaps$gene_start + 1
 overlaps$frac_gene_overlap <- overlaps$overlap/overlaps$gene_length
 
 # get the positive & negative overlaps separated
-overlaps_pos <- overlaps[overlaps$strand == "+",]
-overlaps_neg <- overlaps[overlaps$strand == "-",]
+overlaps_pos <- subset(overlaps, strand == "+")
+overlaps_neg <- subset(overlaps, strand == "-")
 
 # get bidirectionas that are found in both negative and positice strands
 bidirs_overlap_pos_neg <- intersect(unique(overlaps_neg$bidir_id), unique(overlaps_pos$bidir_id))
