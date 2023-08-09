@@ -36,3 +36,5 @@ chr1	16191	16429	tfit	128	.
 ## muMerge Pipeline
 
 ![muMerge Pipeline](https://github.com/Dowell-Lab/bidirectionals_merged/tree/main/README_images/muMerge_strategy_version3.png)
+![muMerge Pipeline](README_images/muMerge_strategy_version3.png)
+![muMerge Pipeline](https://github.com/Dowell-Lab/bidirectionals_merged/blob/main/README_images/muMerge_strategy_version3.png)
