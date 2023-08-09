@@ -1,5 +1,8 @@
 # bidirectionals_merged
+
 Generates a final merged file from bidirectionals called by Tfit and dREG across multiple samples after paper muMerge.
+
+## Summary of scripts
 
 This is a multi-step process with starts with all muMerge files from Tfit and dREG. These files are from experiment muMerge (combined by experimental setup), then experiments are muMerged by cell/tissue types.
 
@@ -19,8 +22,9 @@ This is a multi-step process with starts with all muMerge files from Tfit and dR
 
 8. `remove_bidirs_overlap_conv_gene.R` : Remove bidirectionals overlapping converging gene transcripts.
 
-The final output is a bed6 file for bidirectionals with the following columns: `chromosome` ,`start` ,`stop` ,`bidirectional` ,`number of papers a bidirectional was called`, `strand (it is . since bidirectionals are not stranded)`.
+## Example final output
 
+The final output is a bed6 file for bidirectionals with the following columns: `chromosome` ,`start` ,`stop` ,`bidirectional` ,`number of papers a bidirectional was called`, `strand (it is . since bidirectionals are not stranded)`.
 
 ```
 chr1	3917	4919	dreg	14	.
@@ -29,3 +33,6 @@ chr1	7207	7841	dreg	7	.
 chr1	13264	13506	tfit	14	.
 chr1	16191	16429	tfit	128	.
 ```
+## muMerge Pipeline
+
+![muMerge Pipeline](https://github.com/rutendos/bidirectionals_merged/blob/master/README_images/muMerge_strategy_version3.png)
