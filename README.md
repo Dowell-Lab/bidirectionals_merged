@@ -4,9 +4,11 @@ Generates a final merged file from bidirectionals called by Tfit and dREG across
 
 ## Repository stucture
 
-- bin: scripts used in the merging process
+- **bin**: scripts used in the merging process (See the "Summary of scripts" section below.)
 
-- notebooks: jupyter notebooks with analyses used to determine defaults in scripts
+- **notebooks**: jupyter notebooks with analyses used to determine defaults in scripts.
+
+- **scripts**: sbatch scripts used to run the merging and filtering process.
 
 ## Dependencies
 
