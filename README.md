@@ -2,7 +2,7 @@
 
 Generates a final merged file from bidirectionals called by Tfit and dREG across multiple samples after paper muMerge.
 
-## Repository stucture
+## Repository structure
 
 - **bin**: scripts used in the merging process (See the "Summary of scripts" section below.)
 
