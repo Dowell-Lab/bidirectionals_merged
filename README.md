@@ -2,6 +2,24 @@
 
 Generates a final merged file from bidirectionals called by Tfit and dREG across multiple samples after paper muMerge.
 
+## Repository stucture
+
+- bin: scripts used in the merging process
+
+- notebooks: jupyter notebooks with analyses used to determine defaults in scripts
+
+## Dependencies
+
+The process was performed in bash and R. Below are the tools and libraries used.
+
+`mumerge version 1.1.0` (https://github.com/Dowell-Lab/mumerge) 
+
+`bedtools version 2.28.0`
+
+`R version 3.6.0`
+
+`data.table version 1.14.2`
+
 ## Summary of scripts
 
 This is a multi-step process with starts with all muMerge files from Tfit and dREG. These files are from experiment muMerge (combined by experimental setup), then experiments are muMerged by cell/tissue types.
@@ -10,7 +28,7 @@ This is a multi-step process with starts with all muMerge files from Tfit and dR
 
 2. `dreg_tfit_overlaps.sh` : Overlap between dREG and Tfit muMerge calls.
 
-3. `merge_tfit_dreg_bidir.R` : Combine Tfit and dREG calls taking into account the number of sample supporting a bidirectional transcript. This script also filters single calls found in a low quality paper and calls from papers with low GC content.
+3. `merge_tfit_dreg_bidir.R` : Combine Tfit and dREG calls taking into account the number of sample supporting a bidirectional transcript. This script also filters single calls found in a low quality paper and calls from papers with low GC content. Additionally, regions are filtered by length (a minimum and maximum length filter is applied).
 
 4. `bidir_gene_overlaps.sh` : Sort and merge bidirectional regions. Then overlap the bidirectionals with genes.
 
