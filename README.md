@@ -56,3 +56,9 @@ chr1	16191	16429	tfit	128	.
 ## muMerge Pipeline
 
 ![muMerge Pipeline](https://github.com/Dowell-Lab/bidirectionals_merged/blob/main/README_images/muMerge_strategy_version3.png)
+
+## Authors
+
+- Rutendo F. Sigauke (rutendo.sigauke@colorado.edu): Paper mumerge followed by filtering regions by paper QC+GC content and region widths.
+
+- Hope Townsend (hope.townsend@colorado.edu): Filtering bidirectional regions based on gene overlaps.
